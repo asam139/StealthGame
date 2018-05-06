@@ -17,6 +17,8 @@ AFPSGameMode::AFPSGameMode()
 
 void AFPSGameMode::CompleteMission(APawn* InstigatorPawn)
 {
+    UE_LOG(LogTemp, Log, TEXT("Complete Mission"));
+    
     if (InstigatorPawn) {
         InstigatorPawn->DisableInput(nullptr);
     }
