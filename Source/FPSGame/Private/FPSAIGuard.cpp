@@ -21,6 +21,7 @@ void AFPSAIGuard::BeginPlay()
 	Super::BeginPlay();
     
     PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnPawnSeen);
+    PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
 }
 
 void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
@@ -30,6 +31,11 @@ void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
     }
     
     DrawDebugSphere(GetWorld(), SeenPawn->GetActorLocation(), 32.0f, 12, FColor::Black, false, 10.0f);
+}
+
+void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume)
+{
+    DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Red, false, 10.0f);
 }
 
 // Called every frame
