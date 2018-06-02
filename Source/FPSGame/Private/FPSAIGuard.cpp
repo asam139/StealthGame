@@ -4,6 +4,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "DrawDebugHelpers.h"
 #include "FPSGameMode.h"
+#include "AI/Navigation/NavigationSystem.h"
 
 // Sets default values
 AFPSAIGuard::AFPSAIGuard()
@@ -25,6 +26,11 @@ void AFPSAIGuard::BeginPlay()
     
     PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnPawnSeen);
     PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
+    
+    if (bPatrol)
+    {
+        MoveToNextPatrolPoint();
+    }
 }
 
 void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
@@ -42,6 +48,13 @@ void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
     }
     
     SetGuardState(EAIState::Alerted);
+    
+    // Stop Movement if patrolling
+    AController* Controller = GetController();
+    if (Controller)
+    {
+        Controller->StopMovement();
+    }
 }
 
 void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume)
@@ -65,6 +78,13 @@ void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, 
     GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AFPSAIGuard::ResetOrientation, 3.0f);
     
     SetGuardState(EAIState::Suspicious);
+    
+    // Stop Movement if patrolling
+    AController* Controller = GetController();
+    if (Controller)
+    {
+        Controller->StopMovement();
+    }
 }
 
 void AFPSAIGuard::ResetOrientation()
@@ -77,6 +97,12 @@ void AFPSAIGuard::ResetOrientation()
     SetActorRotation(OriginalRotation);
     
     SetGuardState(EAIState::Idle);
+    
+    // Stopped investigating... if we are a protolling pawn, pick a new patrol point to move to
+    if (bPatrol)
+    {
+        MoveToNextPatrolPoint();
+    }
 }
 
 void AFPSAIGuard::SetGuardState(EAIState NewState)
@@ -91,10 +117,44 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
     OnStateChanged(GuardState);
 }
 
+// CHALLENGE CODE
+
 // Called every frame
 void AFPSAIGuard::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+    Super::Tick(DeltaTime);
+    
+    //UE_LOG(LogTemp, Warning, TEXT("FPSAIGuard: Tick"));
+    
+    // Patrol Goal Checks
+    if (CurrentPatrolPoint)
+    {
+        FVector Delta = GetActorLocation() - CurrentPatrolPoint->GetActorLocation();
+        float DistanceToGoal = Delta.Size();
+        
+        //UE_LOG(LogTemp, Warning, TEXT("FPSAIGuard: ditance to next patrol point -> %f"), DistanceToGoal);  
+        
+        // Check if we are within 50 units of our goal, if so - pick a new patrol point
+        if (DistanceToGoal < 100)
+        {
+            MoveToNextPatrolPoint();
+        }
+    }
 }
+
+void AFPSAIGuard::MoveToNextPatrolPoint()
+{
+    // Assign next patrol point.
+    if (CurrentPatrolPoint == nullptr || CurrentPatrolPoint == SecondPatrolPoint)
+    {
+        CurrentPatrolPoint = FirstPatrolPoint;
+    }
+    else
+    {
+        CurrentPatrolPoint = SecondPatrolPoint;
+    }
+    
+    UNavigationSystem::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
+}
+
 

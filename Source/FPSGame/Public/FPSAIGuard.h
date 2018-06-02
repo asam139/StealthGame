@@ -59,4 +59,24 @@ public:
 
 	
 	
+protected:
+    
+    // CHALLENGE CODE
+    /* Let the guard go on patrol */
+    UPROPERTY(EditInstanceOnly, Category = "AI")
+    bool bPatrol;
+    
+    /* First of two patrol points to patrol betweens */
+    UPROPERTY(EditInstanceOnly, Category = "AI", meta = (EditCondition="bPatrol"))
+    AActor* FirstPatrolPoint;
+    
+    /* Second of two patrol points to patrol betweens */
+    UPROPERTY(EditInstanceOnly, Category = "AI", meta = (EditCondition="bPatrol"))
+    AActor* SecondPatrolPoint;
+    
+    // The current point the actor is either moving to or standind at
+    AActor* CurrentPatrolPoint;
+    
+    void MoveToNextPatrolPoint();
+    
 };
