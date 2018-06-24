@@ -163,10 +163,10 @@ void AFPSAIGuard::MoveToNextPatrolPoint()
 }
 
 
-void UPaperFlipbookComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+void AFPSAIGuard::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     
-    DOREPLIFETIME(UPaperFlipbookComponent, GuardState);
+    DOREPLIFETIME(AFPSAIGuard, GuardState);
 }
 
