@@ -49,16 +49,3 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
         Destroy();
     }
 }
-
-void AFPSCharacter::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-    
-    if (IsLocallyControlled())
-    {
-        FRotator NewRotator = CameraComponent->RelativeRotation;
-        NewRot.Pitch = RemoteViewPitch * 360.0f / 255.0f;
-        
-        CameraComponent->SetRelativeRotation(NewRot);
-    }
-}
