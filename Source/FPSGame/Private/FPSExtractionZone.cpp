@@ -42,6 +42,10 @@ void AFPSExtractionZone::HandleBeginOverlap(UPrimitiveComponent* OverlappedCompo
         {
             GM->CompleteMission(MyPawn, true);
         }
+        else
+        {
+            UE_LOG(LogTemp, Log, TEXT("Not found the GameMode"));
+        }
     }
     else
     {
