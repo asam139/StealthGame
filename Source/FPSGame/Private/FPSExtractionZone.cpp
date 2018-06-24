@@ -44,7 +44,7 @@ void AFPSExtractionZone::HandleBeginOverlap(UPrimitiveComponent* OverlappedCompo
         }
         else
         {
-            UE_LOG(LogTemp, Log, TEXT("Not found the GameMode"));
+            UE_LOG(LogTemp, Log, TEXT("GameMode cannot be found"));
         }
     }
     else

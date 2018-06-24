@@ -21,7 +21,8 @@ AFPSGameMode::AFPSGameMode()
 
 void AFPSGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionSuccess)
 {
-    if (InstigatorPawn) {
+    if (InstigatorPawn)
+    {
         if (SpectatingViewpointClass)
         {
             TArray<AActor*> ReturnedActors;

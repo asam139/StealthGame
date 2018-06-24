@@ -32,12 +32,6 @@ void AFPSObjectiveActor::BeginPlay()
     PlayEffects();
 }
 
-// Called every frame
-void AFPSObjectiveActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void AFPSObjectiveActor::PlayEffects()
 {
